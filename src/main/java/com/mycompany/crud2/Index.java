@@ -37,7 +37,7 @@ public class Index extends javax.swing.JFrame {
     
     private void date(){
         LocalDate lafecha = LocalDate.now();
-        Locale spanishLocale = new Locale("es, ES");
+        Locale spanishLocale = new Locale("es", "ES");
         fecha.setText(lafecha.format(DateTimeFormatter.ofPattern("'Hoy es ' EEEE dd ' de ' MMMM ' del ' YYYY", spanishLocale)));
     }
     

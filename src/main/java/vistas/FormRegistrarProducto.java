@@ -4,6 +4,11 @@
  */
 package vistas;
 
+import Inplementacion.DAOProductosImpl;
+import intefazDAO.DAOProductos;
+import javax.swing.JOptionPane;
+import tablas.CProductos;
+
 /**
  *
  * @author ISABELLA
@@ -19,6 +24,23 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
         //esta linea hace que se sierra la ventana emergente sin cerrar la app
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
     }
+
+    private boolean esEntero() {
+        try {
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+   /* private boolean esDouble() {
+        try {
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    */
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -65,6 +87,11 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
         tituloDescripcion.setText("DESCRIPCION");
 
         btnRegistrar.setText("REGISTRAR");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
 
         btnLimpiar.setText("LIMPIAR");
 
@@ -152,6 +179,88 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        try {
+            String id = txtId.getText();
+            String nombre = txtNombre.getText();
+            String descripcion = txtDescripcion.getText();
+            String precioCompraStr = txtCompra.getText();
+            String ivaStr = txtIva.getText();
+            String precioVentaStr = txtVenta.getText();
+
+            boolean todasLasValidacionesExitosas = true;
+
+            if (id.isEmpty() || nombre.isEmpty() || descripcion.isEmpty() || precioCompraStr.isEmpty()
+                    || ivaStr.isEmpty() || precioVentaStr.isEmpty()) {
+                // Mostrar un mensaje de error o realizar alguna acción si algún campo está vacío
+                JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                todasLasValidacionesExitosas = false;
+            }
+            CProductos producto = new CProductos();
+            producto.setCategoria(nombre);
+            producto.setDescripcion(descripcion);
+
+            // Convertir las cadenas a los tipos de datos adecuados y validar            
+            if (esEntero()) {
+                int inId = Integer.parseInt(id);
+                producto.setId(inId);
+
+            } else {
+                todasLasValidacionesExitosas = false;
+            }
+            if (esEntero()) {
+                int precioCompra = Integer.parseInt(precioCompraStr);
+                producto.setPrecioCompra(precioCompra);
+
+            } else {
+                todasLasValidacionesExitosas = false;
+            }
+            if (esEntero()) {
+                int iva = Integer.parseInt(ivaStr);
+                producto.setIVA(iva);
+
+            } else {
+                todasLasValidacionesExitosas = false;
+            }
+
+            if (esEntero()) {
+                int precioVenta = Integer.parseInt(precioVentaStr);
+                producto.setPrecioCompra(precioVenta);
+
+            } else {
+                todasLasValidacionesExitosas = false;
+            }
+
+            if (todasLasValidacionesExitosas) {
+                try {
+                    DAOProductos dao = new DAOProductosImpl();
+                    dao.registrar(producto);
+                    JOptionPane.showMessageDialog(this, "Producto registrado correctamente.",
+                            "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+
+                    txtId.setText("");
+                    txtDescripcion.setText("");
+                    txtNombre.setText("");
+                    txtIva.setText("");
+                    txtCompra.setText("");
+                    txtVenta.setText("");
+                } catch (Exception e) {
+
+                }
+            } else {
+
+            }
+        } catch (Exception e) {
+            String mensaje = e.getMessage();
+
+            // String mensajeUsuario = "no se puede registrar el producto por que los valores de ID, PRECIO O IVA son INVALIDOS";
+            JOptionPane.showMessageDialog(this, mensaje,
+                    "MENSAJE INFORMATION", JOptionPane.INFORMATION_MESSAGE);
+            }
+          
+    }//GEN-LAST:event_btnRegistrarActionPerformed
 
     /**
      * @param args the command line arguments

@@ -16,9 +16,9 @@ public class Coneccion {
 
     public Connection conection;
     private final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    private final String BD_URL = "jdbc:mysql://localhost:3307/crud";
+    private final String BD_URL = "jdbc:mysql://localhost:3306/crud";
     private final String USER = "root";
-    private final String PASSWORD = "";
+    private final String PASSWORD = "Alsibar01985";
     
     public void conectar(){
         try {

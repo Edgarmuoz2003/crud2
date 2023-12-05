@@ -4,17 +4,56 @@
  */
 package vistas;
 
+import Inplementacion.DAOProductosImpl;
+import intefazDAO.DAOProductos;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import tablas.CProductos;
+
 /**
  *
  * @author edgar
  */
-public class FormProductos extends javax.swing.JFrame {
+public final class FormProductos extends javax.swing.JFrame {
 
     /**
      * Creates new form FormProductos
      */
     public FormProductos() {
         initComponents();
+        cargarProducto();
+    }
+
+    public void cargarProducto() {
+        try {
+            DAOProductos dao = new DAOProductosImpl();
+            DefaultTableModel tablaP = (DefaultTableModel) tablaProductos.getModel();
+            List<CProductos> productos = dao.listar();
+
+            // Verificar si hay productos en la lista antes de mostrarlos
+            if (!productos.isEmpty()) {
+                for (CProductos producto : productos) {
+                    Object[] rowData = {
+                        producto.getId(),
+                        producto.getCategoria(),
+                        producto.getDescripcion(),
+                        producto.getPrecioCompra(),
+                        producto.getIVA(),
+                        producto.getPrecioVenta()
+                    };
+                    // Agregar la fila al modelo
+                    tablaP.addRow(rowData);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "No hay productos en la base de datos.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            // Manejar la excepción adecuadamente
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -29,10 +68,9 @@ public class FormProductos extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaProductos = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
 
@@ -42,7 +80,7 @@ public class FormProductos extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(51, 153, 0));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -50,7 +88,7 @@ public class FormProductos extends javax.swing.JFrame {
                 "Id", "Nombre", "Descripción", "Precio compra", "IVA", "Precio venta"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablaProductos);
 
         jButton1.setText("Registrar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -66,9 +104,7 @@ public class FormProductos extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setText(" ");
-
-        jButton3.setText("Buscar");
+        jButton3.setText("Eliminar");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -76,37 +112,39 @@ public class FormProductos extends javax.swing.JFrame {
         });
 
         jButton4.setText("Actualizar");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1107, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(44, 44, 44)
+                .addGap(50, 50, 50)
                 .addComponent(jButton1)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
-                .addGap(90, 90, 90)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 537, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton3)
-                .addGap(29, 29, 29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton4)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3)
+                    .addComponent(jButton2)
+                    .addComponent(jButton1)
                     .addComponent(jButton4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -127,19 +165,86 @@ public class FormProductos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         FormRegistrarProducto ventanaRegistrar = new FormRegistrarProducto();
         ventanaRegistrar.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        FormEditarProducto ventanaEditar = new FormEditarProducto();
-        ventanaEditar.setVisible(true);
+        if (tablaProductos.getSelectedRow() > -1) {
+            try {
+                int proId = (int) tablaProductos.getValueAt(tablaProductos.getSelectedRow(), 0);
+                DAOProductos dao = new DAOProductosImpl();
+                CProductos producto = dao.getProductos(proId);
+
+// Crear una instancia de tu ventana de edición
+                Editar ventanaEdicion = new Editar();
+
+// Configurar la interfaz de edición con los detalles del producto
+                ventanaEdicion.cargarDatos(producto);
+
+// Mostrar la ventana de edición
+                ventanaEdicion.setVisible(true);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Debes seleccionar el producto a editar.",
+                    "MENSAJE INFORMATIVO", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        DefaultTableModel tablaP = (DefaultTableModel) tablaProductos.getModel();
+
+        // Limpia todas las filas existentes en la tabla
+        tablaP.setRowCount(0);
+
+        // Aquí deberías cargar los datos desde tu fuente de datos (base de datos, lista, etc.)
+        List<CProductos> productos = obtenerDatosActualizados();
+
+        // Añade las filas con los datos actualizados al modelo de la tabla
+        for (CProductos producto : productos) {
+            Object[] rowData = {producto.getId(), producto.getCategoria(), producto.getDescripcion(),
+                producto.getPrecioCompra(), producto.getIVA(), producto.getPrecioVenta()};
+            tablaP.addRow(rowData);
+        }
+    }
+
+    // Método para obtener datos actualizados
+    private List<CProductos> obtenerDatosActualizados() {
+        // Aquí obtene los datos desde la base de datos
+        DAOProductos dao = new DAOProductosImpl();
+        try {
+            return dao.listar();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return List.of(); // Devuelve una lista vacía en caso de error
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        DAOProductos dao = new DAOProductosImpl();
+        DefaultTableModel tablaP = (DefaultTableModel) tablaProductos.getModel();
+        if (tablaProductos.getSelectedRow() > -1) {
+            for (int i : tablaProductos.getSelectedRows()) {
+                try {
+                    dao.eliminar((int) tablaProductos.getValueAt(i, 0));
+                    tablaP.removeRow(i);
+                    String mensajeUsuario = "EL PRODUCTO FUE ELIMINADO CORRECTAMENTE ";
+                    JOptionPane.showMessageDialog(this, mensajeUsuario,
+                            "MENSAJE INFORMATION", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception e) {
+                } finally {
+                }
+            }
+        } else {
+            String mensajeUsuario = "Debes seleccionar el producto a eliminar. ";
+            JOptionPane.showMessageDialog(this, mensajeUsuario,
+                    "MENSAJE INFORMATION", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -176,6 +281,7 @@ public class FormProductos extends javax.swing.JFrame {
         });
     }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -184,7 +290,6 @@ public class FormProductos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable tablaProductos;
     // End of variables declaration//GEN-END:variables
 }

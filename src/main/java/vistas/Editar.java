@@ -11,18 +11,30 @@ import tablas.CProductos;
 
 /**
  *
- * @author ISABELLA
+ * @author Esteban Rodriguez
  */
-public class FormRegistrarProducto extends javax.swing.JFrame {
+public class Editar extends javax.swing.JFrame {
 
     /**
-     * Creates new form FormRegistrar
+     * Creates new form Editar
      */
-    public FormRegistrarProducto() {
+    public Editar() {
         initComponents();
         setLocationRelativeTo(null);
         //esta linea hace que se sierra la ventana emergente sin cerrar la app
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+    }
+
+    public void cargarDatos(CProductos producto) {
+// Configurar los campos de texto u otros componentes con los detalles del producto
+        txtId.setText(String.valueOf(producto.getId()));
+        txtNombre.setText(producto.getCategoria());
+        txtDescripcion.setText(producto.getDescripcion());
+        txtIva.setText(String.valueOf(producto.getIVA()));
+        txtCompra.setText(String.valueOf(producto.getPrecioCompra()));
+        txtVenta.setText(String.valueOf(producto.getPrecioVenta()));
+
+        txtId.setEditable(false);
     }
 
     private boolean esEntero() {
@@ -32,15 +44,6 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
             return false;
         }
     }
-
-   /* private boolean esDouble() {
-        try {
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-    */
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -66,13 +69,11 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
         tituloDescripcion = new javax.swing.JLabel();
         txtDescripcion = new javax.swing.JTextField();
         btnRegistrar = new javax.swing.JButton();
-        btnLimpiar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
 
         titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        titulo.setText("REGISTRAR PRODUCTO");
+        titulo.setText("EDITAR PRODUCTO");
 
         tituloId.setText("ID");
 
@@ -86,14 +87,12 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
 
         tituloDescripcion.setText("DESCRIPCION");
 
-        btnRegistrar.setText("REGISTRAR");
+        btnRegistrar.setText("Editar");
         btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegistrarActionPerformed(evt);
             }
         });
-
-        btnLimpiar.setText("LIMPIAR");
 
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
@@ -101,9 +100,9 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(titulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(bgLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(bgLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(txtVenta, javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,14 +120,11 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
                             .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                             .addComponent(tituloNombre)
                             .addComponent(txtIva)
-                            .addComponent(txtDescripcion))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(txtDescripcion)))
                     .addGroup(bgLayout.createSequentialGroup()
-                        .addGap(77, 77, 77)
-                        .addComponent(btnRegistrar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 184, Short.MAX_VALUE)
-                        .addComponent(btnLimpiar)
-                        .addGap(110, 110, 110))))
+                        .addGap(234, 234, 234)
+                        .addComponent(btnRegistrar)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,10 +156,8 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
                     .addComponent(txtVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegistrar)
-                    .addComponent(btnLimpiar))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addComponent(btnRegistrar)
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -202,7 +196,7 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
             producto.setCategoria(nombre);
             producto.setDescripcion(descripcion);
 
-            // Convertir las cadenas a los tipos de datos adecuados y validar            
+            // Convertir las cadenas a los tipos de datos adecuados y validar
             if (esEntero()) {
                 int inId = Integer.parseInt(id);
                 producto.setId(inId);
@@ -236,16 +230,10 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
             if (todasLasValidacionesExitosas) {
                 try {
                     DAOProductos dao = new DAOProductosImpl();
-                    dao.registrar(producto);
-                    JOptionPane.showMessageDialog(this, "Producto registrado correctamente.",
+                    dao.editar(producto);
+                    JOptionPane.showMessageDialog(this, "Producto editado correctamente.",
                             "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
-
-                    txtId.setText("");
-                    txtDescripcion.setText("");
-                    txtNombre.setText("");
-                    txtIva.setText("");
-                    txtCompra.setText("");
-                    txtVenta.setText("");
+                    dispose();
                 } catch (Exception e) {
 
                 }
@@ -258,8 +246,8 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
             // String mensajeUsuario = "no se puede registrar el producto por que los valores de ID, PRECIO O IVA son INVALIDOS";
             JOptionPane.showMessageDialog(this, mensaje,
                     "MENSAJE INFORMATION", JOptionPane.INFORMATION_MESSAGE);
-            }
-          
+        }
+
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     /**
@@ -279,28 +267,26 @@ public class FormRegistrarProducto extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormRegistrarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Editar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormRegistrarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Editar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormRegistrarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Editar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormRegistrarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Editar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormRegistrarProducto().setVisible(true);
+                new Editar().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bg;
-    private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JLabel titulo;
     private javax.swing.JLabel tituloCompra;
